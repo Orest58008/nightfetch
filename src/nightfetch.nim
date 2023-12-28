@@ -8,18 +8,19 @@ var orderedWords, orderedSources: seq[string]
 let config = configPath.open
 while not config.endOfFile:
   let l = config.readLine
-  var word: string
-  for c in l:
-    if c == '{':
-      orderedWords.add(word)
-      orderedSources.add("")
-      word = ""
-    elif c == '}':
-      let wordSplit = word.split(':')
-      orderedSources.add(wordSplit[0])
-      orderedWords.add(wordSplit[1])
-    else:
-      word.add(c)      
+  if l[0] != '#':
+    var word: string
+    for c in l:
+      if c == '{':
+        orderedWords.add(word)
+        orderedSources.add("")
+        word = ""
+      elif c == '}':
+        let wordSplit = word.split(':')
+        orderedSources.add(wordSplit[0])
+        orderedWords.add(wordSplit[1])
+      else:
+        word.add(c)      
 config.close()
 
 # Reading KEYxVAL style files
