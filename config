@@ -1,4 +1,4 @@
-os     {os:PRETTY_NAME}
+os     {os:pretty_name}
 host   {board:vendor} {board:name} {board:version}
 kernel {kernel:osrelease}
 memory {mem:memused_mb}M / {mem:memtotal_mb}M
