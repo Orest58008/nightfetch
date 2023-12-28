@@ -23,11 +23,9 @@ while not config.endOfFile:
 config.close()
 
 # Reading KEYxVAL style files
-proc processFile(path: string, separator: char): StringTableRef =
+proc processFile(path: string, separator: char): seq[(string, string)] =
   let f = path.open
   defer: f.close
-
-  result = newStringTable()
 
   while not f.endOfFile:
     let l = f.readLine.replace("\"")
@@ -39,7 +37,7 @@ proc processFile(path: string, separator: char): StringTableRef =
     else:
       (key, val) = ("", "")
 
-    result[key] = val
+    result.add((key, val))
 
 # Fetching the values
 var sources = orderedSources.deduplicate()
@@ -62,12 +60,28 @@ for i, e in sources.pairs:
       fetched[i][f] = data
   of "os":
     let osFetched = processFile("/etc/os-release", '=')
-    for k, v in osFetched: fetched[i][k.toLower] = v
+    for (k, v) in osFetched: fetched[i][k.toLower] = v
+  of "cpu":
+    var processor: string
+    
+    for (k, v) in processFile("/proc/cpuinfo", ':'):
+      case k
+      of "processor": processor = v
+      of "vendor_id": fetched[i]["vendor"] = v
+      of "model": fetched[i]["model"] = v
+      of "model name": fetched[i]["name"] = v
+      of "siblings": fetched[i]["threads"] = v
+      of "cpu cores": fetched[i]["cores"] = v
+      of "cpu MHz":
+        fetched[i]["mhz_" & processor] = v
+        let ghz = v.parseFloat / 1000
+        fetched[i]["ghz_" & processor] = ghz.formatFloat(ffDecimal, 3)
+      else: discard
   of "mem":
     var memfree, memtotal, swapfree, swaptotal: int
     let memFetched = processFile("/proc/meminfo", ':')
 
-    for k, v in memFetched:
+    for (k, v) in memFetched:
       if k.contains("Total") or k.contains("Free"):
         let dataKB: int = v.replace(" kB", "").parseInt
         let dataMB: int = dataKB div 1024
@@ -97,6 +111,7 @@ for i, e in sources.pairs:
       fetched[i][j & "used_kb"] = $usedKB
       fetched[i][j & "used_mb"] = $usedMB
       fetched[i][j & "used_gb"] = $usedGB
+  else: discard
 
 for i, _ in sources.pairs:
-  echo $sources[i], " is ", $fetched[i]
+  echo $sources[i], " is ", $fetched[i], "\n"

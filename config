@@ -3,3 +3,4 @@ host   {board:vendor} {board:name} {board:version}
 kernel {kernel:osrelease}
 memory {mem:memused_mb}M / {mem:memtotal_mb}M
 swap   {mem:swapused_mb}M / {mem:swaptotal_mb}M
+cpu    {cpu:model_name}
