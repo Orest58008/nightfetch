@@ -1,4 +1,4 @@
-import std/[sequtils, strutils, strtabs, osproc]
+import std/[envvars, osproc, sequtils, strutils, strtabs]
 import distros
 
 let configPath = "./config"
@@ -211,6 +211,9 @@ for i, e in orderedWords.pairs:
       words.add(sourceFetched[e])
     elif source == "distro" and e.contains("logo_"):
       words.add(sourceFetched["logo_x"])
+    elif source == "env":
+      words.add(getEnv(e))
+      
   else:
     words.add(e)
 
