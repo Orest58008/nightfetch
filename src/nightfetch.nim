@@ -1,9 +1,22 @@
-import std/[envvars, osproc, sequtils, strutils, strtabs]
+import std/[cmdline, envvars, osproc, sequtils, strutils, strtabs]
 import distros
 
-let configPath = "./config"
 
-var orderedWords, orderedSources: seq[string]
+# Processing the args
+var configPath = if getEnv("XDG_CONFIG_HOME") != "":
+                   getEnv("XDG_CONFIG_HOME") & "/nightfetch/config"
+                 else:
+                   getEnv("HOME") & "/.config/nightfetch/config"
+
+var specialLogo: string
+
+for i in 1..paramCount():
+  case i.paramStr
+  of "-c", "--config":
+    configPath = paramStr(i + 1)
+  of "-l", "--logo":
+    specialLogo = paramStr(i + 1)
+  else: discard
 
 # Read KEYxVAL style files
 proc processFile(path: string, separator: char): seq[(string, string)] =
@@ -22,7 +35,7 @@ proc processFile(path: string, separator: char): seq[(string, string)] =
 
     result.add((key, val))
 
-# Get a specific KEYxVAL pair from KEYxVAL file
+# Get a specific VAL pair from KEYxVAL file by its KEY
 proc processKey(path: string, separator: char, key: string): string =
   let f = path.open
   defer: f.close
@@ -44,12 +57,16 @@ proc styleLine(line: string, unstyle = false): string =
 
   if result.contains("{cauto}"):
     var id = processKey("/etc/os-release", '=', "ID")
-    let id_like = processKey("/etc/os-release", '=', "ID_LIKE").splitWhitespace
+    
+    if specialLogo != "" and ids.contains(specialLogo):
+      id = specialLogo
+    else:
+      let id_like = processKey("/etc/os-release", '=', "ID_LIKE").splitWhitespace
 
-    if not ids.contains(id):
-      for i in id_like:
-        if ids.contains(id):
-          id = i
+      if not ids.contains(id):
+        for i in id_like:
+          if ids.contains(id):
+            id = i
 
     let color = properties[ids.find(id)]["color"]
     result = result.replace("{cauto}", color)
@@ -69,6 +86,8 @@ proc styleLine(line: string, unstyle = false): string =
       result = result.replace(f, "\x1b[" & $i & "m")
     
 # Processing config
+var orderedWords, orderedSources: seq[string]
+
 let config = configPath.open
 while not config.endOfFile:
   let l = config.readLine.styleLine & '{'
@@ -183,7 +202,27 @@ for i, e in sources.pairs:
           id = i
 
     let distro = properties[ids.find(id)]
+    
+    let pm_out = distro["pm_command"].execProcess
+    if not pm_out.contains("not found") or pm_out.contains("No such"):
+     distro["pm_count"] = $pm_out.countLines
 
+    var specialLogoFlag = false
+    if specialLogo != "" and ids.contains(specialLogo):
+      specialLogoFlag = true
+      let logoDistro = properties[ids.find(specialLogo)]
+    
+      var j = 0
+      while logoDistro.contains("logo_" & $j):
+        distro["logo_" & $j] = logoDistro["logo_" & $j]
+        j += 1
+        
+      let logo_width = distro["logo_0"].styleLine(true).len
+      let logo_x = ' '.repeat(logo_width)
+      while distro.contains("logo_" & $j):
+        distro["logo_" & $j] = logo_x
+        j += 1
+    
     let logo_width = distro["logo_0"].styleLine(true).len
     let logo_x = ' '.repeat(logo_width)
     distro["logo_x"] = logo_x
@@ -192,14 +231,11 @@ for i, e in sources.pairs:
     while distro.contains("logo_" & $j):
       distro["logo_" & $j] = distro["logo_" & $j].styleLine
       j += 1
-    
-    let pm_out = distro["pm_command"].execProcess
-    if not pm_out.contains("not found") or pm_out.contains("No such"):
-     distro["pm_count"] = $pm_out.countLines
 
     fetched[i] = distro
   else: discard
 
+# Outputting everything
 var words: string
 for i, e in orderedWords.pairs:
   let source = orderedSources[i]
