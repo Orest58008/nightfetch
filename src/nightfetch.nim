@@ -132,6 +132,9 @@ for i, e in sources.pairs:
   of "os":
     for (k, v) in processFile("/etc/os-release", '='):
       fetched[i][k.toLower] = v
+  of "host":
+    let hostname = readFile("/etc/hostname").strip
+    fetched[i]["name"] = hostname
   of "cpu":
     var processor: string
     
@@ -202,10 +205,11 @@ for i, e in sources.pairs:
           id = i
 
     let distro = properties[ids.find(id)]
-    
-    let pm_out = distro["pm_command"].execProcess
-    if not pm_out.contains("not found") or pm_out.contains("No such"):
-     distro["pm_count"] = $pm_out.countLines
+   
+    if orderedWords.contains("pm_count"):
+      let pm_out = distro["pm_command"].execProcess
+      if not pm_out.contains("not found") or pm_out.contains("No such"):
+        distro["pm_count"] = $pm_out.countLines
 
     var specialLogoFlag = false
     if specialLogo != "" and ids.contains(specialLogo):

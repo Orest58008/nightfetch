@@ -1,0 +1,7 @@
+ {b}{distro:logo_0}   {cauto}{b}{d}{env:USER}@{host:name}
+ {b}{distro:logo_1}   {cauto}{b}os     { }{os:pretty_name}
+ {b}{distro:logo_2}   {cauto}{b}host   { }{board:name} {board:version}
+ {b}{distro:logo_3}   {cauto}{b}kernel { }{kernel:osrelease}
+ {b}{distro:logo_4}   {cauto}{b}uptime { }{uptime:hours}h {uptime:mins}m {uptime:secs}s
+ {b}{distro:logo_5}   {cauto}{b}pkgs   { }{distro:pm_count}
+ {b}{distro:logo_6}   {cauto}{b}memory { }{mem:memused_mb}M / {mem:memtotal_mb}M
