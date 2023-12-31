@@ -16,6 +16,21 @@ for i in 1..paramCount():
     configPath = paramStr(i + 1)
   of "-l", "--logo":
     specialLogo = paramStr(i + 1)
+  of "-h", "--help":
+    const helpMessage = [
+      "Nightfetch is a flexible system information tool written in Nim",
+      "",
+      "Parameters:",
+      "\t-c/--config /path/to/config",
+      "\t\tchange path to config",
+      "\t-l/--logo logo",
+      "\t\tchange distro:logo_tiny, distro:logo_$i and distro:color to that of logo",
+      "\t-h/--help",
+      "\t\tshow this message"
+    ]
+    for l in helpMessage:
+      echo l
+    1.quit
   else: discard
 
 # Read KEYxVAL style files
@@ -211,11 +226,12 @@ for i, e in sources.pairs:
       if not pm_out.contains("not found") or pm_out.contains("No such"):
         distro["pm_count"] = $pm_out.countLines
 
-    var specialLogoFlag = false
     if specialLogo != "" and ids.contains(specialLogo):
-      specialLogoFlag = true
       let logoDistro = properties[ids.find(specialLogo)]
-    
+
+      distro["color"] = logoDistro["color"]
+      distro["logo_tiny"] = logoDistro["logo_tiny"]
+      
       var j = 0
       while logoDistro.contains("logo_" & $j):
         distro["logo_" & $j] = logoDistro["logo_" & $j]

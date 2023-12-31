@@ -1,0 +1,64 @@
+* Nightfetch
+*** A flexible system information tool written in Nim
+
+** OS support
+Nightfetch is built on Linux-specific directories so it works on Linux only.
+
+** Source support
+Nightfetch supports these sources:
+- ~os~ - ~/etc/os-release~
+- ~cpu~ - ~/proc/cpuinfo~
+- ~mem~ - ~/proc/meminfo~
+- ~uptime~ - ~/proc/uptime~
+- ~kernel~ - ~/proc/sys/kernel/arch~, ~/proc/sys/kernel/hostname~, ~/proc/sys/kernel/osrelease~, ~/proc/sys/kernel/ostype~
+- ~board~ - ~/sys/devices/virtual/dmi/id/board_name~, ~/sys/devices/virtual/dmi/id/board_vendor~, ~/sys/devices/virtual/dmi/id/board_version~
+- ~host:name~ - ~/etc/hostname~
+- ~distro~ - your distro's logo and package manager
+- ~env~ - envvars
+
+** Configuration
+By default, the config file is located in ~$XDG_CONFIG_HOME/nightfetch/config~ or ~$HOME/.config/nightfetch/config~
+
+*** How to include info from sources
+To include a variable, use ~{source:key}~ in your config.
+Key naming is as follows:
+
+- ~os~, ~cpu~, ~mem~  - as in source, *all lowercase*
+  - ~cpu~ - only ~vendor~, ~model~, ~name~, ~threads~, ~cores~, ~mhz_$core~, ~ghz_$core~
+  - ~mem~ - only fields containing ~Total~ or ~Free~ and ~swapused~, ~memused~ in kb, mb, gb(suffix with ~_kb~, ~_mb~, ~_gb~ respectively)
+- ~uptime~ - ~uptime_hours~, ~uptime_mins~ and ~uptime_secs~ for hours, minutes and seconds
+- ~kernel~ - ~arch~, ~hostname~, ~osrelease~, ~ostype~, all corresponding to the file of the same name
+- ~board~ - ~name~, ~vendor~, ~version~, all corresponding to board_$key
+- ~host~ - only ~name~ - contents of ~/etc/hostname~
+- ~distro~ - ~pm_name~ - the name of distro's package manager, ~pm_count~ - number of packages installed, ~color~ - used in ~{cauto}~, ~logo_tiny~ - distro's logo as in [[https://www.nerdfonts.com/][nerd fonts]][fn:1], ~logo_$i~ - distro's logo line by line
+- ~env~ - environment variable name verbatim
+
+*** Styling
+Nightfetch supports these styles:
+- ~{ }~ - clear all prior styling(including colors)
+- ~{b}~ - bold
+- ~{d}~ - dim
+- ~{i}~ - italic
+- ~{u}~ - underline
+
+and these colors:
+- ~{cauto}~ - primary color of your distro
+- ~{c0}~ - black
+- ~{c1}~ - red
+- ~{c2}~ - green
+- ~{c3}~ - yellow
+- ~{c4}~ - blue
+- ~{c5}~ - magenta
+- ~{c6}~ - cyan
+- ~{c7}~ - white
+
+*** Comments
+All lines that start with ~#~ are ignored
+
+** Command line parameters:
+- ~-c/--config /path/to/config~ - change path to config
+- ~-l/--config logo~ - change ~distro:logo_tiny~, ~distro:logo_$i~ and ~distro:color~ to that of ~logo~
+- ~-h/--help~ - show help
+
+
+[fn:1: opensuse-tumbleweed, opensuse-leap and pureos don't have nf icons, so they're substituted by similar-looking characters]
