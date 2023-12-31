@@ -103,13 +103,13 @@ let properties* = @[
     "pm_command": "dpkg-query -f '.\n' -W",
     "color": "{c4}",
     "logo_tiny": "",
-    "logo_0": "{c4} __....     ",
-    "logo_1": "{c4}    ``=:=.  ",
-    "logo_2": "{c4}        `+#.",
-    "logo_3": "{c4}         =@@",
-    "logo_4": "{c4}      :+%@#;",
-    "logo_5": "{c4}.:=+#@@%*;  ",
-    "logo_6": "{c4}#@@@#=;     "}.newStringTable,
+    "logo_0": "{c4}-.,          ",
+    "logo_1": "{c4}   `'-._     ",
+    "logo_2": "{c4}        `::. ",
+    "logo_3": "{c4}          \\::",
+    "logo_4": "{c4}      __--`:`",
+    "logo_5": "{c4} _,--` _.-`  ",
+    "logo_6": "{c4}:_,--``      "}.newStringTable,
   { "pm_name":    "pacman",
     "pm_command": "pacman -Q",
     "color": "{c5}",
@@ -147,13 +147,13 @@ let properties* = @[
     "pm_command": "guix package --list-installed",
     "color": "{c3}",
     "logo_tiny": "",
-    "logo_0": "{c3}\\____          ____/ ",
-    "logo_1": "{c3}\\__ \\        / __/",
-    "logo_2": "  {c3}\\ \\      / /    ",
-    "logo_3": "   {c3}\\ \\    / /     ",
-    "logo_4": "    {c3}\\ \\  / /      ",
-    "logo_5": "     {c3}\\ \\/ /       ",
-    "logo_6": "      {c3}\\__/        "}.newStringTable,
+    "logo_0": "{c3}\\____          ____/",
+    "logo_1": "{c3} \\__ \\        / __/ ",
+    "logo_2": "{c3}    \\ \\      / /    ",
+    "logo_3": "{c3}     \\ \\    / /     ",
+    "logo_4": "{c3}      \\ \\  / /      ",
+    "logo_5": "{c3}       \\ \\/ /       ",
+    "logo_6": "{c3}        \\__/        "}.newStringTable,
   { "pm_name":    "pacman",
     "pm_command": "pacman -Q",
     "color": "{c7}",
@@ -339,10 +339,11 @@ let properties* = @[
   ]
 
 
-# some logos and some pm commands are taken from or derived from dylanaraps/pfetch and Gobidev/pfetch-rs under the MIT License:
+# some logos are taken from or derived from dylanaraps/pfetch, Gobidev/pfetch-rs or ufetch under the MIT License:
 
 # Copyright (c) 2016-2019 Dylan Araps : pfetch
 # Copyright (c) 2023 Adrian Groh      : pfetch-rs
+# Copyright (c) 2015 J Schillinger    : ufetch
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 # The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
