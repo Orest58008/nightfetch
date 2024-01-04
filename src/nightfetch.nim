@@ -65,7 +65,7 @@ proc processKey(path: string, separator: char, key: string): string =
       if k == key:
         result = v
         break
-    
+
 # Style config and logos
 proc styleLine(line: string, unstyle = false): string =
   result = line & "{ }"
@@ -77,12 +77,11 @@ proc styleLine(line: string, unstyle = false): string =
       id = specialLogo
     else:
       let id_like = processKey("/etc/os-release", '=', "ID_LIKE").splitWhitespace
-
       if not ids.contains(id):
         for i in id_like:
-          if ids.contains(id):
+          if ids.contains(i):
             id = i
-
+            
     let color = properties[ids.find(id)]["color"]
     result = result.replace("{cauto}", color)
   
@@ -216,7 +215,7 @@ for i, e in sources.pairs:
 
     if not ids.contains(id):
       for i in id_like:
-        if ids.contains(id):
+        if ids.contains(i):
           id = i
 
     let distro = properties[ids.find(id)]
