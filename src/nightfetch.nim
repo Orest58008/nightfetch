@@ -257,7 +257,9 @@ for i, e in sources.pairs:
       if not pm_out.contains("not found") or pm_out.contains("No such"):
         distro["pm_count"] = $pm_out.countLines
 
-    if specialLogo != "" and ids.contains(specialLogo):
+    if specialLogo != "" and not ids.contains(specialLogo): specialLogo = "linux"
+
+    if specialLogo != "":
       let logoDistro = properties[ids.find(specialLogo)]
 
       distro["color"] = logoDistro["color"]
