@@ -6,7 +6,7 @@ The format is based on [[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]
 
 ** To Be Released
 *** Add
-- FreeBSD distro
+- FreeBSD, OpenBSD distros
 *** Fix
 - EndeavourOS, OpenSUSE Tumbleweed logos
 - IOError on WSL

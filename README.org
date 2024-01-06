@@ -2,7 +2,8 @@
 *** A flexible system information tool written in Nim
 
 ** OS support
-Nightfetch is built on Linux-specific directories so it works on Linux only.
+Nightfetch is built on Linux-specific directories so it may not work on other systems. 
+FreeBSD and OpenBSD are technically in the distro list, but are untested.
 
 ** Source support
 Nightfetch supports these sources:
