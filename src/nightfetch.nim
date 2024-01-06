@@ -35,6 +35,9 @@ for i in 1..paramCount():
 
 # Read KEYxVAL style files
 proc processFile(path: string, separator: char): seq[(string, string)] =
+  try: path.open
+  except IOError: return
+  
   let f = path.open
   defer: f.close
 
@@ -52,6 +55,9 @@ proc processFile(path: string, separator: char): seq[(string, string)] =
 
 # Get a specific VAL pair from KEYxVAL file by its KEY
 proc processKey(path: string, separator: char, key: string): string =
+  try: path.open
+  except IOError: return
+  
   let f = path.open
   defer: f.close
 
@@ -73,7 +79,7 @@ proc styleLine(line: string, unstyle = false): string =
   if result.contains("{cauto}"):
     var id = processKey("/etc/os-release", '=', "ID")
     
-    if specialLogo != "" and ids.contains(specialLogo):
+    if specialLogo != "":
       id = specialLogo
     else:
       let id_like = processKey("/etc/os-release", '=', "ID_LIKE").splitWhitespace
@@ -81,6 +87,8 @@ proc styleLine(line: string, unstyle = false): string =
         for i in id_like:
           if ids.contains(i):
             id = i
+
+    if not ids.contains(id): id = "linux"
             
     let color = properties[ids.find(id)]["color"]
     result = result.replace("{cauto}", color)
@@ -156,11 +164,8 @@ for i, e in sources.pairs:
       except IOError:
         discard
   of "os":
-    try:
-      for (k, v) in processFile("/etc/os-release", '='):
-        fetched[i][k.toLower] = v
-    except IOError:
-      discard
+    for (k, v) in processFile("/etc/os-release", '='):
+      fetched[i][k.toLower] = v
   of "host":
     try:
       let hostname = readFile("/etc/hostname").strip
@@ -247,7 +252,7 @@ for i, e in sources.pairs:
 
     let distro = properties[ids.find(id)]
    
-    if orderedWords.contains("pm_count"):
+    if orderedWords.contains("pm_count") and distro.contains("pm_command"):
       let pm_out = distro["pm_command"].execProcess
       if not pm_out.contains("not found") or pm_out.contains("No such"):
         distro["pm_count"] = $pm_out.countLines
