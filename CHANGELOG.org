@@ -7,10 +7,10 @@ The format is based on [[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]
 ** To Be Released
 *** Add
 - FreeBSD, OpenBSD distros
+- Fallback Linux distro
 *** Fix
 - EndeavourOS, OpenSUSE Tumbleweed logos
-- IOError on WSL
-- IOError when config doesn't exist in the specified or default path
+- A bunch of IOError-s
 
 ** 1.0.1
 *** Fix

@@ -156,11 +156,17 @@ for i, e in sources.pairs:
       except IOError:
         discard
   of "os":
-    for (k, v) in processFile("/etc/os-release", '='):
-      fetched[i][k.toLower] = v
+    try:
+      for (k, v) in processFile("/etc/os-release", '='):
+        fetched[i][k.toLower] = v
+    except IOError:
+      discard
   of "host":
-    let hostname = readFile("/etc/hostname").strip
-    fetched[i]["name"] = hostname
+    try:
+      let hostname = readFile("/etc/hostname").strip
+      fetched[i]["name"] = hostname
+    except IOError:
+      discard
   of "cpu":
     var processor: string
     
@@ -222,13 +228,22 @@ for i, e in sources.pairs:
     fetched[i]["mins"] = $mins
     fetched[i]["secs"] = $secs
   of "distro":
-    var id = processKey("/etc/os-release", '=', "ID")
-    let id_like = processKey("/etc/os-release", '=', "ID_LIKE").splitWhitespace
+    var
+      id: string
+      id_like: seq[string]
+
+    try:
+      id = processKey("/etc/os-release", '=', "ID")
+      id_like = processKey("/etc/os-release", '=', "ID_LIKE").splitWhitespace
+    except IOError:
+      discard
 
     if not ids.contains(id):
       for i in id_like:
         if ids.contains(i):
           id = i
+
+    if not ids.contains(id): id = "linux"
 
     let distro = properties[ids.find(id)]
    
