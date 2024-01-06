@@ -30,7 +30,7 @@ for i in 1..paramCount():
     ]
     for l in helpMessage:
       echo l
-    1.quit
+    quit(0)
   else: discard
 
 # Read KEYxVAL style files
@@ -102,7 +102,13 @@ proc styleLine(line: string, unstyle = false): string =
 # Processing config
 var orderedWords, orderedSources: seq[string]
 
-let config = configPath.open
+var config: File
+try:
+  config = configPath.open
+except IOError:
+  echo configPath & " can't be found!"
+  echo "Create it or try `nightfetch -c /path/to/config`"
+  quit(1)
 while not config.endOfFile:
   let l = config.readLine.styleLine & '{'
   # idk why but it doesn't register some symbols without this `& '{'`
@@ -138,11 +144,17 @@ for i, e in sources.pairs:
   of "kernel":
     const files = ["arch", "hostname", "osrelease", "ostype"]
     for f in files:
-      fetched[i][f] = readFile("/proc/sys/kernel/" & f).strip
+      try:
+        fetched[i][f] = readFile("/proc/sys/kernel/" & f).strip
+      except IOError:
+        discard
   of "board":
     const files = ["name", "vendor", "version"]
     for f in files:
-      fetched[i][f] = readFile("/sys/devices/virtual/dmi/id/board_" & f).strip
+      try:
+        fetched[i][f] = readFile("/sys/devices/virtual/dmi/id/board_" & f).strip
+      except IOError:
+        discard
   of "os":
     for (k, v) in processFile("/etc/os-release", '='):
       fetched[i][k.toLower] = v
