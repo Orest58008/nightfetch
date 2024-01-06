@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]], and this project adheres to [[https://semver.org/spec/v2.0.0.html][Semantic Versioning]].
 
-** Unreleased
+** To Be Released
 *** Fix
-- EndeavourOS logo
+- EndeavourOS, OpenSUSE Tumbleweed logos
+- IOError on WSL
+- IOError when config doesn't exist in the specified or default path
 
 ** 1.0.1
 *** Fix
