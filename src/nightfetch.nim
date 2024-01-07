@@ -1,4 +1,4 @@
-import std/[cmdline, envvars, osproc, sequtils, strutils, strtabs]
+import std/[cmdline, envvars, osproc, sequtils, strtabs, strutils]
 import distros
 
 
@@ -8,12 +8,14 @@ var configPath = if getEnv("XDG_CONFIG_HOME") != "":
                  else:
                    getEnv("HOME") & "/.config/nightfetch/config"
 
-var specialLogo: string
+var specialLogo, config: string
 
 for i in 1..paramCount():
   case i.paramStr
   of "-c", "--config":
     configPath = paramStr(i + 1)
+  of "-i", "--inline":
+    config = paramStr(i + 1)
   of "-l", "--logo":
     specialLogo = paramStr(i + 1)
   of "-h", "--help":
@@ -23,8 +25,10 @@ for i in 1..paramCount():
       "Parameters:",
       "\t-c/--config /path/to/config",
       "\t\tchange path to config",
+      "\t-i/--inline config",
+      "\t\tinclude config as a line instead of sourcing it from file",
       "\t-l/--logo logo",
-      "\t\tchange distro:logo_tiny, distro:logo_$i and distro:color to that of logo",
+      "\t\tchange distro:logo_tiny, distro:logo_$i and distro:color",
       "\t-h/--help",
       "\t\tshow this message"
     ]
@@ -110,19 +114,20 @@ proc styleLine(line: string, unstyle = false): string =
 # Processing config
 var orderedWords, orderedSources: seq[string]
 
-var config: File
-try:
-  config = configPath.open
-except IOError:
-  echo configPath & " can't be found!"
-  echo "Create it or try `nightfetch -c /path/to/config`"
-  quit(1)
-while not config.endOfFile:
-  let l = config.readLine.styleLine & '{'
+if config == "":
+  try:
+    config = configPath.readFile()
+  except IOError:
+    echo configPath & " can't be found!"
+    echo "Create it or try `nightfetch -c /path/to/config`"
+    quit(1)
+
+for l in config.splitLines:
+  let line = l & '{'
   # idk why but it doesn't register some symbols without this `& '{'`
-  if l[0] != '#':
+  if line[0] != '#':
     var word: string
-    for c in l:
+    for c in line:
       if c == '{' or c == '\n':
         orderedWords.add(word)
         orderedSources.add("")
@@ -137,8 +142,6 @@ while not config.endOfFile:
         
   orderedWords.add("\n")
   orderedSources.add("")
-      
-config.close()
 
 # Fetching the values
 var sources = orderedSources.deduplicate()

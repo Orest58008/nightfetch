@@ -1,7 +1,7 @@
 # Package
 
-version       = "1.0.1"
-author        = "Orest Ivanko"
+version       = "1.1.0"
+author        = "Orest I"
 description   = "A flexible system information tool written in Nim"
 license       = "BSD-2-Clause"
 srcDir        = "src"

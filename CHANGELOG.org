@@ -5,9 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]], and this project adheres to [[https://semver.org/spec/v2.0.0.html][Semantic Versioning]].
 
 ** To Be Released
+
+** 1.1.0
 *** Add
 - FreeBSD, OpenBSD, QubesOS, Crux distros
 - Fallback Linux distro
+- Inline config option
 *** Fix
 - EndeavourOS, OpenSUSE Tumbleweed logos
 - A bunch of IOError-s
