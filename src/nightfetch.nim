@@ -122,8 +122,8 @@ if config == "":
     echo "Create it or try `nightfetch -c /path/to/config`"
     quit(1)
 
-for l in config.splitLines:
-  let line = l & '{'
+for l in config.splitLines():
+  let line = l.styleLine & '{'
   # idk why but it doesn't register some symbols without this `& '{'`
   if line[0] != '#':
     var word: string
@@ -140,8 +140,8 @@ for l in config.splitLines:
       else:
         word.add(c)
         
-  orderedWords.add("\n")
-  orderedSources.add("")
+    orderedWords.add("\n")
+    orderedSources.add("")
 
 # Fetching the values
 var sources = orderedSources.deduplicate()
