@@ -6,7 +6,7 @@ The format is based on [[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]
 
 ** To Be Released
 *** Add
-- FreeBSD, OpenBSD distros
+- FreeBSD, OpenBSD, QubesOS, Crux distros
 - Fallback Linux distro
 *** Fix
 - EndeavourOS, OpenSUSE Tumbleweed logos
